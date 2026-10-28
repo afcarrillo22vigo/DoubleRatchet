@@ -1,8 +1,7 @@
-import hmac
 import os
 from cryptography.hazmat.primitives.asymmetric import x25519
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import dh
+from cryptography.hazmat.primitives import hashes, hmac
 from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
@@ -71,5 +70,13 @@ def DECRYPT(mk, ciphertext_with_nonce, associated_data=b""):
     plaintext = aesgcm.decrypt(nonce, ciphertext, associated_data)
 
     return plaintext
+
+BOB_STATIC_SEED = b"bob_initial_static_seed_32bytes!"
+
+def GET_BOB_INITIAL_KEYPAIR():
+    """Genera un par de claves estático y determinista para la inicialización de Bob."""
+    private_key = x25519.X25519PrivateKey.from_private_bytes(BOB_STATIC_SEED)
+    public_key = private_key.public_key()
+    return private_key, public_key
 
     
